@@ -1,7 +1,11 @@
 apply plugin: 'com.android.application'
-//apply plugin: 'com.xll.gradlepack'
-//apply plugin: com.xll.second.TestLocalPlugin
+apply plugin: 'com.xll.gradlepack'
+apply plugin: com.xll.second.TestLocalPlugin
 
+//  gradle clean assembleBeta -PVERSION_CODE=5 -PVERSION_NAME=1.1.1 -POUT_PUT_DIR=/home/user/Desktop -PFILE_NAME
+testPlugin {
+    verCode=project.hasProperty("VERSION_CODE")?Integer.parseInt(VERSION_CODE):3
+}
 
 
 android {
@@ -22,8 +26,8 @@ android {
         targetSdkVersion 25
         targetCompatibility = '1.7'
         sourceCompatibility = '1.7'
-        versionCode 1
-        versionName "1.0"
+        versionCode project.testPlugin.verCode
+        versionName project.testPlugin.verName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField("String", "API_HOST", "\"t\"")
     }
@@ -58,6 +62,7 @@ tasks.withType(JavaCompile) {
 //})
 
 task moveAPk(type:Copy) {
+    println"${project.testPlugin.verCode}"
     println "--------------------------"
     println "moveApk out"
     println "--------------------------"
@@ -69,6 +74,8 @@ task moveAPk(type:Copy) {
         into "$projectDir\\libs"
     }
 }
+
+
 moveAPk.dependsOn "build"
 
 dependencies {

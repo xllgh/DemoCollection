@@ -17,7 +17,7 @@ public class Test2Plugin implements Plugin<Project> {
         String TEST_URL="TEST_URL"
         String DEV_URL="DEV_URL"
 
-
+        project.extensions.create("testPlugin",TestPluginExtension)
 
         System.out.println("========================");
         System.out.println("hello gradle plugin! :From Test2Plugin");
