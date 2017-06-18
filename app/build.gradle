@@ -1,0 +1,84 @@
+apply plugin: 'com.android.application'
+//apply plugin: 'com.xll.gradlepack'
+//apply plugin: com.xll.second.TestLocalPlugin
+
+
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+
+//    tasks.withType(JavaCompile) {
+//        compileTask -> compileTask.dependsOn 'ndkBuild', 'copyJniLibs'
+//    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    defaultConfig {
+        applicationId "com.xll.administrator.democollection"
+        minSdkVersion 15
+        targetSdkVersion 25
+        targetCompatibility = '1.7'
+        sourceCompatibility = '1.7'
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "API_HOST", "\"t\"")
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+// tasks.create("moveAPk",{
+//    println "--------------------------"
+//    println "moveApk out"
+//    println "--------------------------"
+//    doLast{
+//        copy {
+//            println "--------------------------"
+//            println "moveApk in"
+//            println "--------------------------"
+//            from "$projectDir\\build"
+//            into "$projectDir\\libs"
+//        }
+//
+//    }
+//
+//})
+
+task moveAPk(type:Copy) {
+    println "--------------------------"
+    println "moveApk out"
+    println "--------------------------"
+    doLast{
+        println "--------------------------"
+        println "moveApk in"
+        println "--------------------------"
+        from "$projectDir\\build"
+        into "$projectDir\\libs"
+    }
+}
+moveAPk.dependsOn "build"
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.github.satyan:sugar:1.4'
+    testCompile 'junit:junit:4.12'
+//    compile 'com.xll.plugin:packplugin:1.0.0'
+}
