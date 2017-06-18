@@ -1,0 +1,117 @@
+http://blog.csdn.net/u014637428/article/details/52249423?locationNum=14
+***************
+基础知识
+
+Project
+生命周期：
+Project和“build.gradle”有一对一的关系。在编译初始化阶段，Gradle为每一个工程集合Project对象
+如下所示：
+·创建Settings实例
+·计算"settings.gradle"脚本，配置Settings对象
+·使用“Settings”对象来创建Project的层级结构
+·最后，通过执行“build.gradle”文件来计算每个Project
+
+任务：
+一个project实质上是Task的集合，每个任务实现一些基本的功能。例如:
+Compiling classes,running unit tests.使用TaskContainer的create(
+方法将方法添加到project中，使用TaskCollection.getByName(String)来
+定位使用存在的方法。
+
+依赖：
+project有很多的依赖。
+
+插件：
+插件可以用来模块化和重用project配置。 Plugins can be applied using the PluginAware.apply(java.util.Map) method, or by using the plugins script block. 
+
+Properties
+Project的属性和方法可以直接使用
+you could use project.name rather than name to access the project's name.
+
+属性范围：
+1、project对象本身的属性
+2、project的外部属性。 project.ext.prop1 = "foo"
+3、通过插件添加的extensions 
+4、通过插件添加的convention properties。 A plugin can add properties and methods to a project through the project's Convention object.
+5、project的task
+6、The extra properties and convention properties inherited from the project's parent, recursively up to the root project. The properties of this scope are read-only.
+
+
+
+Gradle script是配置脚本。当脚本执行的时候，它配置的是特定类型的对象
+Build script->Project
+Init sctipt->Gradle
+Setting script->Settings
+
+这些代表对象的方法和属性是可使用的
+
+再者，每一个Gradle script实现了Script接口。接口的方法是属性也是可以使用的
+
+
+***************
+Build script的结构
+组成：状态和脚本块。
+      状态：方法调用，属性赋值，局域变量定义
+	  脚本块：它是以闭包为参数的方法调用。这个闭包是配置闭包，它配置代表对象的属性
+top层级的脚本块：
+allprojects{}:配置项目及其子项目
+artifacts{};配置项目的发布文件
+buildScript{}:配置项目编译脚本的classpath
+configuration{}:配置项目的依赖配置项
+dependencies{}:配置项目的依赖
+repositories{}:配置项目的厂库
+sourceSets{}:配置项目的源代码集合
+subproject{}:配置项目的子项目
+publishing{}:配置发布插件添加的 PublishExtension
+
+Build script脚本是Groovy脚本，所有编译脚本也可以包含Groovy脚本允许的元素，例如方法定义和类定义
+
+
+****************
+核心类型
+Project:可以纲领性的获取所有Gradle's特征
+Task:代表一个原子操作
+Gradle:代表一个Gradle请求
+Settings：build项目实例的配置信息
+IncludeBuild:混合编译
+
+
+************
+容器类型
+容器类型处理不同的声明元素（例如：dependencies,configurations,artifacts）
+ConfigurationContainer
+RepositoryHandler
+DependencyHandler
+AritifactHandler
+
+*********
+编译缓存类型
+
+
+
+
+
+
+
+
+
+
+1、buildSript{}
+配置项目的编译脚本的classPath
+
+2、Configuration{}
+配置项目的依赖配置项
+
+3、dependencies{}
+配置项目的依赖
+
+4、repositories{}
+配置项目的仓库
+
+5、subproject{}
+配置项目的子项目
+
+6、findbugs{}
+配置通过findbugs插件添加的FindBugsExtension
+
+7、sourceSets{}
+配置项目的源代码集合
