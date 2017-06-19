@@ -13,7 +13,7 @@ public class MainActivity extends Activity implements MyRecylerAdapter.RecyclerI
     private RecyclerView mRecyclerView;
     private MyRecylerAdapter adapter;
     private  String[] array={"DownloadActivity","SpannableStringActivity","SugarOrmDemo"};
-
+    String testFlag ="111";
 
 
 

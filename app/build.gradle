@@ -8,6 +8,56 @@ testPlugin {
 }
 
 
+//cancel task
+tasks.whenTaskAdded { task ->
+    if (task.name.contains('AndroidTest')) {
+        task.enabled = false
+    }
+}
+
+//https://my.oschina.net/sfshine/blog/726681
+def replaceContent(String path,String source,String dest){
+    def tt=new File(path).getText("UTF-8").replaceAll("String testFlag=.","String testFlag ="+dest);
+    new File(path).write(tt,'UTF-8')
+}
+
+//add task
+//http://www.open-open.com/lib/view/open1439216256770.html
+afterEvaluate {
+    android.applicationVariants.each { variant ->
+        def dx = tasks.findByName("build")
+        def hello = "hello${variant.name.capitalize()}"
+        task(hello) << {
+            println "hello"
+            replaceContent("$projectDir\\src\\main\\java\\com\\xll\\administrator\\democollection\\MainActivity.java","111","hahah")
+        }
+        tasks.findByName(hello).dependsOn dx.taskDependencies.getDependencies(dx)
+        dx.dependsOn tasks.findByName(hello)
+    }
+}
+
+
+//替换文件的字符串
+task replaceConstants<<{
+}
+//preBuild.dependsOn taskA
+
+def fileReader(path,oldStr,newStr){
+
+    def readerString="";
+    new File(paht).withReader ("UTF-8"){
+        reader->reader.eachLine {
+            if(it.find(oldStr)){
+                it=it.replace(oldStr,newStr)
+            }
+            readerString<<=it
+            readerString<<'\n'
+        }
+            return readerString
+    }
+}
+
+
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.0'
