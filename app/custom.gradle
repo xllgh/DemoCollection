@@ -1,0 +1,166 @@
+apply plugin: 'com.android.application'
+apply plugin: 'com.xll.gradlepack'
+
+
+buildscript {
+    repositories {
+        jcenter()
+        maven {
+            url uri('D:/repos')
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+        classpath 'com.xll.plugin:packplugin:1.0.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+    }
+}
+
+//  gradle clean assembleBeta -PVERSION_CODE=5 -PVERSION_NAME=1.1.1 -POUT_PUT_DIR=/home/user/Desktop -PFILE_NAME
+testPlugin {
+    verCode=project.hasProperty("VERSION_CODE")?Integer.parseInt(VERSION_CODE):3
+}
+
+
+//cancel task
+tasks.whenTaskAdded { task ->
+    if (task.name.contains('AndroidTest')) {
+        task.enabled = false
+    }
+}
+
+//https://my.oschina.net/sfshine/blog/726681
+def replaceContent(String path,String source,String dest){
+    def tt=new File(path).getText("UTF-8").replaceAll("String testFlag=.","String testFlag ="+dest);
+    new File(path).write(tt,'UTF-8')
+}
+
+//add task
+//http://www.open-open.com/lib/view/open1439216256770.html
+afterEvaluate {
+    android.applicationVariants.each { variant ->
+        def dx = tasks.findByName("build")
+        def hello = "hello${variant.name.capitalize()}"
+        task(hello) << {
+            println "hello"
+            replaceContent("$projectDir\\src\\main\\java\\com\\xll\\administrator\\democollection\\MainActivity.java","111","hahah")
+        }
+        tasks.findByName(hello).dependsOn dx.taskDependencies.getDependencies(dx)
+        dx.dependsOn tasks.findByName(hello)
+    }
+}
+
+
+//替换文件的字符串
+task replaceConstants<<{
+}
+//preBuild.dependsOn taskA
+
+def fileReader(path,oldStr,newStr){
+
+    def readerString="";
+    new File(paht).withReader ("UTF-8"){
+        reader->reader.eachLine {
+            if(it.find(oldStr)){
+                it=it.replace(oldStr,newStr)
+            }
+            readerString<<=it
+            readerString<<'\n'
+        }
+            return readerString
+    }
+}
+
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+
+//    tasks.withType(JavaCompile) {
+//        compileTask -> compileTask.dependsOn 'ndkBuild', 'copyJniLibs'
+//    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    defaultConfig {
+        applicationId "com.xll.administrator.democollection"
+        minSdkVersion 15
+        targetSdkVersion 25
+        targetCompatibility = '1.7'
+        sourceCompatibility = '1.7'
+        versionCode project.testPlugin.verCode
+        versionName project.testPlugin.verName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "API_HOST", "\"t\"")
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+tasks.withType(JavaCompile) {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+// tasks.create("moveAPk",{
+//    println "--------------------------"
+//    println "moveApk out"
+//    println "--------------------------"
+//    doLast{
+//        copy {
+//            println "--------------------------"
+//            println "moveApk in"
+//            println "--------------------------"
+//            from "$projectDir\\build"
+//            into "$projectDir\\libs"
+//        }
+//
+//    }
+//
+//})
+
+allprojects {
+    repositories {
+        jcenter()
+        maven {
+            url uri('D:/repos')
+        }
+    }
+}
+
+task moveAPk(type:Copy) {
+    println"${project.testPlugin.verCode}"
+    println "--------------------------"
+    println "moveApk out"
+    println "--------------------------"
+    doLast{
+        println "--------------------------"
+        println "moveApk in"
+        println "--------------------------"
+        from "$projectDir\\build"
+        into "$projectDir\\libs"
+    }
+}
+
+
+moveAPk.dependsOn "build"
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    compile 'com.android.support:recyclerview-v7:25.0.0'
+    compile 'com.github.satyan:sugar:1.4'
+    testCompile 'junit:junit:4.12'
+//    compile 'com.xll.plugin:packplugin:1.0.0'
+}
