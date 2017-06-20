@@ -14,6 +14,29 @@ tasks.whenTaskAdded { task ->
         task.enabled = false
     }
 }
+task testExec(type:Exec) {
+    commandLine "cmd.exe" ,"/c" ,"dir"
+   def pw= standardOutput.newPrintWriter()
+
+    println("***************************************")
+    println("***************************************")
+
+}
+
+
+
+task setWhoamiProperty {
+    doLast {
+        new ByteArrayOutputStream().withStream { os ->
+            def result = exec {
+//                executable = 'cmd.exe /c dir'
+                commandLine "cmd.exe" ,"/c" ,"dir"
+                standardOutput = os
+            }
+            println("hahah"+os.toString() )
+        }
+    }
+}
 
 //https://my.oschina.net/sfshine/blog/726681
 def replaceContent(String path,String source,String dest){
