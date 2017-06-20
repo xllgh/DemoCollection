@@ -14,6 +14,7 @@ tasks.whenTaskAdded { task ->
         task.enabled = false
     }
 }
+http://www.07net01.com/2015/11/964173.html
 task testExec(type:Exec) {
     commandLine "cmd.exe" ,"/c" ,"dir"
    def pw= standardOutput.newPrintWriter()
