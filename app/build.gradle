@@ -49,6 +49,20 @@ task getPath(){
     println "newPath:"+newPath
 }
 
+task copyFile{
+    def src = "C:\\Users\\Administrator\\Desktop\\tmp\\libm.so"
+    def dst = "C:\\Users\\Administrator\\Desktop\\tmp\\libmtest.so"
+    File dstFile = new File(dst)
+    if (dstFile.exists() == false) {
+        dstFile.createNewFile()
+    }
+    new File(src).withPrintWriter{ printWriter ->
+        new File(dst).eachLine{ line->
+            printWriter.println(line)
+        }
+    }
+}
+
 //https://my.oschina.net/sfshine/blog/726681
 def replaceContent(String path,String source,String dest){
 
