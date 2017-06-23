@@ -14,15 +14,15 @@ tasks.whenTaskAdded { task ->
         task.enabled = false
     }
 }
-http://www.07net01.com/2015/11/964173.html
-task testExec(type:Exec) {
-    commandLine "cmd.exe" ,"/c" ,"dir"
-   def pw= standardOutput.newPrintWriter()
-
-    println("***************************************")
-    println("***************************************")
-
-}
+//http://www.07net01.com/2015/11/964173.html
+//task testExec(type:Exec) {
+//    commandLine "cmd.exe" ,"/c" ,"dir"
+//   def pw= standardOutput.newPrintWriter()
+//
+//    println("***************************************")
+//    println("***************************************")
+//
+//}
 
 
 
@@ -39,8 +39,19 @@ task setWhoamiProperty {
     }
 }
 
+task getPath(){
+    def path = "E:/material-design-icons-1.0.0\\action/1x_ios"
+    println "oldPath:"+path
+    String reg = '\\\\|/'
+    String replace = '\\'+File.separator
+    println "reg"+reg
+    def newPath = path.replaceAll(reg,replace)
+    println "newPath:"+newPath
+}
+
 //https://my.oschina.net/sfshine/blog/726681
 def replaceContent(String path,String source,String dest){
+
     def tt=new File(path).getText("UTF-8").replaceAll("String testFlag=.","String testFlag ="+dest);
     new File(path).write(tt,'UTF-8')
 }
